@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barkod Sistemi Eğitimi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://cdn.pixabay.com/photo/2022/08/18/11/29/wind-energy-7394705_1280.jpg');
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 520px;
+            margin: 50px auto;
+            background: rgba(128, 0, 128, 0.8); /* Güzel bir mor renk */
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            display: none;
+        }
+
+        .output {
+            margin-top: 20px;
+        }
+
+        .output p {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            input {
+                font-size: 14px;
+            }
+
+            .output p {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 18px;
+            }
+
+            input {
+                font-size: 12px;
+            }
+
+            .output p {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Barkod Sistemi Eğitimi Sevgi Gürsoy Katkılarıyla</h1>
+        <label for="inputField">Hastalık İsmi veya Hissedilen Duygu:</label>
+        <input type="text" id="inputField" placeholder="Harf giriniz">
+        <div id="error" class="error">Lütfen sadece harfler giriniz (büyük/küçük harf fark etmez).</div>
+        <div class="output" id="output"></div>
+    </div>
+
+    <script>
+        const harfDegerleri = {
+            "A": 1, "J": 1, "S": 1, "Ş": 1,
+            "B": 2, "T": 2, "K": 2,
+            "C": 3, "Ç": 3, "L": 3, "U": 3, "Ü": 3,
+            "D": 4, "M": 4, "V": 4,
+            "E": 5, "N": 5, "W": 5,
+            "F": 6, "O": 6, "Ö": 6,
+            "G": 7, "Ğ": 7, "P": 7, "Y": 7,
+            "H": 8, "Q": 8, "Z": 8,
+            "I": 9, "İ": 9, "R": 9
+        };
+
+        const inputField = document.getElementById('inputField');
+        const errorDiv = document.getElementById('error');
+        const outputDiv = document.getElementById('output');
+
+        inputField.addEventListener('input', () => {
+            const value = inputField.value.trim().toUpperCase();
+            const isValid = /^[A-ZÇĞİÖŞÜ]+$/.test(value);
+
+            if (!isValid && value !== '') {
+                errorDiv.style.display = 'block';
+                outputDiv.innerHTML = '';
+            } else {
+                errorDiv.style.display = 'none';
+                calculateAndDisplay(value);
+            }
+        });
+
+        function calculateAndDisplay(value) {
+            if (value === '') {
+                outputDiv.innerHTML = '';
+                return;
+            }
+
+            let toplam = 0;
+            const harfDegerleriListesi = [];
+
+            for (const harf of value) {
+                const harfDegeri = harfDegerleri[harf] || 0;
+                harfDegerleriListesi.push(`${harf}: ${harfDegeri}`);
+                toplam += harfDegeri;
+            }
+
+            while (toplam >= 10) {
+                toplam = toplam.toString().split('').reduce((a, b) => a + parseInt(b), 0);
+            }
+
+            outputDiv.innerHTML = `
+                <p>Girdiğiniz Harfler: ${value}</p>
+                <p>Harf Değerleri: ${harfDegerleriListesi.join(', ')}</p>
+                <p>Hesaplanan Sonuç: ${toplam}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
